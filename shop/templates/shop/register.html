@@ -1,0 +1,21 @@
+{% extends 'shop/base.html' %}
+{% block title %}Регистрация — Витрина{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card p-4 shadow-sm border-0 mt-5 bg-white">
+            <h3 class="mb-4 text-center fw-bold text-dark">Создать аккаунт</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-3">Зарегистрироваться</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{% url 'shop:login' %}" class="text-decoration-none small text-primary">Уже есть аккаунт? Войти</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

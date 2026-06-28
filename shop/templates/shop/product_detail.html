@@ -1,0 +1,114 @@
+{% extends 'shop/base.html' %}
+{% block title %}{{ product.name }} — Витрина{% endblock %}
+
+{% block content %}
+<div class="row bg-white p-4 rounded shadow-sm">
+    <!-- Информация о товаре -->
+    <div class="col-md-6 border-end">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}" class="text-decoration-none">Каталог</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.category.name }}</li>
+            </ol>
+        </nav>
+        <h1 class="mb-3 fw-bold text-dark">{{ product.name }}</h1>
+        <h3 class="text-success mb-4 fw-bold">{{ product.price }} ₽</h3>
+        <h5 class="fw-bold">Описание товара:</h5>
+        <p class="text-secondary leading-relaxed">{{ product.description }}</p>
+
+        <!-- Кнопка Избранного с использованием официальных иконок Bootstrap -->
+        {% if user.is_authenticated %}
+            <button id="favorite-btn" class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %} mt-3 px-4 fw-bold shadow-sm">
+                {% if is_favorite %}
+                    <i class="bi bi-heart-fill me-2 text-white"></i><span id="favorite-text">В избранном</span>
+                {% else %}
+                    <i class="bi bi-heart me-2 text-danger"></i><span id="favorite-text">В избранное</span>
+                {% endif %}
+            </button>
+        {% else %}
+            <div class="alert alert-warning mt-3 py-2 fs-6 border-0 shadow-sm">
+                Чтобы добавить товар в избранное или оставить отзыв, <a href="{% url 'shop:login' %}" class="alert-link">войдите в аккаунт</a>.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Блок отзывов -->
+    <div class="col-md-6 ps-md-4 mt-4 mt-md-0">
+        <h4 class="mb-4 fw-bold text-dark">Отзывы покупателей</h4>
+        <div class="mb-4" style="max-height: 400px; overflow-y: auto;">
+            {% for review in product.reviews.all %}
+                <div class="card mb-3 shadow-sm border-0 bg-light">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="text-dark">{{ review.user.username }}</strong>
+                            <span class="badge bg-warning text-dark">★ {{ review.rating }}/5</span>
+                        </div>
+                        <p class="card-text text-secondary my-0 fs-6">{{ review.text }}</p>
+                        <small class="text-muted d-block mt-2" style="font-size: 0.75rem;">{{ review.created_at|date:"d.m.Y H:i" }}</small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted italic">Отзывов пока нет. Будьте первым!</p>
+            {% endfor %}
+        </div>
+
+        <!-- Форма добавления отзыва -->
+        {% if user.is_authenticated %}
+            <div class="card p-3 border-0 bg-light shadow-sm">
+                <h5 class="mb-3 fw-bold">Оставить отзыв</h5>
+                <form method="post" action="{% url 'shop:product_detail' product.slug %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label mb-1 text-muted small fw-bold">ВАША ОЦЕНКА:</label>
+                        {{ review_form.rating }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label mb-1 text-muted small fw-bold">ТЕКСТ ОТЗЫВА:</label>
+                        {{ review_form.text }}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm w-100 py-2 fw-bold">Отправить отзыв</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Скрипт динамического изменения иконок и классов Bootstrap при клике -->
+<script>
+    (function() {
+        const favBtn = document.getElementById('favorite-btn');
+        if (favBtn) {
+            favBtn.addEventListener('click', function() {
+                const url = "{% url 'shop:toggle_favorite' product.id %}";
+
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        const textSpan = document.getElementById('favorite-text');
+                        const icon = favBtn.querySelector('i');
+
+                        if (data.is_favorite) {
+                            // Кнопка становится залитой красной, иконка становится БЕЛОЙ
+                            favBtn.className = 'btn btn-danger mt-3 px-4 fw-bold shadow-sm';
+                            icon.className = 'bi bi-heart-fill me-2 text-white';
+                            textSpan.innerText = 'В избранном';
+                        } else {
+                            // Кнопка становится прозрачной с красной рамкой, иконка становится КРАСНОЙ
+                            favBtn.className = 'btn btn-outline-danger mt-3 px-4 fw-bold shadow-sm';
+                            icon.className = 'bi bi-heart me-2 text-danger';
+                            textSpan.innerText = 'В избранное';
+                        }
+                    }
+                })
+                .catch(error => console.error('Ошибка AJAX:', error));
+            });
+        }
+    })();
+</script>
+{% endblock %}
