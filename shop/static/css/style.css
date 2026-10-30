@@ -1,0 +1,102 @@
+/* УЛЬТИМАТИВНЫЙ e-commerce СТИЛЬ ДЛЯ МАРКЕТПЛЕЙСА*/
+
+/* Базовые настройки страницы */
+body {
+    background-color: #f8f9fa !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #212529;
+}
+
+/* Ограничение гигантских картинок на витрине */
+#products-grid .card-img-top {
+    height: 200px !important;
+    object-fit: contain !important;
+    padding: 15px;
+    transition: transform 0.3s ease;
+    z-index: 2; /* Выводим на передний план для кликов */
+}
+
+#products-grid .card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* Сетка карточек товаров */
+#products-grid .card {
+    border-radius: 16px !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease-in-out;
+    background-color: #ffffff !important;
+    position: relative;
+    overflow: hidden;
+}
+
+#products-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Кнопки витрины */
+.btn-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    border-radius: 10px !important;
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+.btn-purple {
+    background-color: #6f42c1 !important;
+    border-color: #6f42c1 !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+/* Стили модального окна карусели */
+.carousel-item img {
+    max-height: 400px !important;
+    object-fit: contain !important;
+}
+
+/* Левый ИИ-блок */
+.ai-assistant-card {
+    background: linear-gradient(135deg, #f6f0ff 0%, #e8dbff 100%);
+    border: 1px solid #d6bfff !important;
+    border-radius: 16px;
+}
+
+/* ЖЕСТКАЯ ФИКСАЦИЯ СЕРДЕЧЕК ИЗБРАННОГО В ВЕРХНЕМ ПРАВОМ УГЛУ КАРТОЧКИ*/
+
+/* Перебиваем флекс-центрирование родительского контейнера для абсолютной кнопки */
+#products-grid .product-card .position-relative {
+    position: relative !important;
+}
+
+/* Принудительно прижимаем кнопку-сердечко к верхнему правому краю */
+#products-grid .btn-fav.position-absolute {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    left: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    z-index: 10 !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: background-color 0.2s ease, transform 0.2s ease !important;
+}
+
+/* Легкий интерактивный эффект при наведении мышки на сердечко */
+#products-grid .btn-fav.position-absolute:hover {
+    transform: scale(1.1) !important;
+    background-color: #ffffff !important;
+}

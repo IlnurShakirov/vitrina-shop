@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Презентация маркетплейса «Смартфон Shop»</title>
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f0f12;
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            border-bottom: 2px solid #23232e;
+            background: linear-gradient(145deg, #15151a 0%, #0f0f12 100%);
+            position: relative;
+        }
+        .slide-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            color: #9d4edd;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+        }
+        h2 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: #9d4edd;
+            border-left: 6px solid #7b2cbf;
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+        h3 {
+            font-size: 1.5rem;
+            color: #e0aaff;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        p, li {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #e0e0e6;
+        }
+        /* КИНЕТИЧЕСКАЯ АНИМАЦИЯ ЗНАЧКОВ ТЕХНОЛОГИЙ ПРИ НАВЕДЕНИИ */
+        .badge-tech {
+            background-color: #241442;
+            border: 2px solid #7b2cbf;
+            color: #e0aaff;
+            padding: 14px 26px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 14px;
+            margin: 12px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(123, 44, 191, 0.15);
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                        background-color 0.3s ease,
+                        box-shadow 0.3s ease,
+                        border-color 0.3s ease;
+        }
+        .badge-tech:hover {
+            transform: translateY(-8px) scale(1.08);
+            background-color: #7b2cbf;
+            border-color: #e0aaff;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(157, 78, 221, 0.5);
+        }
+        .card-custom {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 25px;
+            height: 100%;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .card-custom:hover {
+            transform: translateY(-5px);
+            border-color: rgba(157, 78, 221, 0.4);
+            background: rgba(157, 78, 221, 0.03);
+        }
+        .explain-box {
+            background: rgba(40, 167, 69, 0.06);
+            border-left: 4px solid #28a745;
+            padding: 12px 18px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #a2e8b7;
+        }
+        .accent-text {
+            color: #9d4edd;
+            font-weight: bold;
+        }
+        pre {
+            background: #050507;
+            border-radius: 14px;
+            border: 1px solid #23232e;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.5);
+        }
+        /* Стили для ER-диаграммы Слайда 7 */
+        .db-table {
+            background: #141419;
+            border: 1px solid #2d2d38;
+            border-top: 4px solid #7b2cbf;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .table-user { border-top-color: #00b4d8; }
+        .table-product { border-top-color: #28a745; }
+        .table-cart { border-top-color: #ffb703; }
+        .table-order { border-top-color: #e63946; }
+
+        .db-header {
+            background: rgba(255,255,255,0.02);
+            padding: 12px 15px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            border-bottom: 1px solid #2d2d38;
+        }
+        .db-field {
+            padding: 8px 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #191921;
+            display: flex;
+            justify-content: space-between;
+        }
+        .db-pk { color: #ffb703; font-weight: bold; }
+        .db-fk { color: #a2d2ff; font-weight: bold; }
+        .db-type { color: #666677; font-size: 0.85rem; }
+
+        .slide-counter {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            color: #555566;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- СЛАЙД 1: ТИТУЛЬНЫЙ -->
+    <section class="slide">
+        <div class="slide-content text-center">
+            <h1>Смартфон Shop <span style="display: inline-block; vertical-align: middle; margin-left: 10px; filter: drop-shadow(0 4px 10px rgba(157,78,221,0.4)); font-size: 3.8rem;">📱</span></h1>
+            <h3 class="text-uppercase tracking-wider">Разработка e-commerce маркетплейса электроники</h3>
+            <p class="mt-4 text-muted mx-auto" style="max-width: 800px; font-size: 1.3rem;">Веб-приложение для онлайн-продажи смартфонов с интеграцией <b>гибридного e-commerce ИИ-подборщика на базе RAG-архитектуры (Llama 3.2 / Ollama)</b> и автоматической генерацией коммерческих ReportLab PDF-чеков.</p>
+            <div class="mt-5 p-4 mx-auto" style="max-width: 550px; background: rgba(157, 78, 221, 0.05); border-radius: 16px; border: 1px solid rgba(157, 78, 221, 0.2); box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+                <p class="mb-2" style="font-size: 1.3rem;"><strong>Автор проекта:</strong> Шакиров Ильнур Динарович</p>
+                <p class="mb-2" style="font-size: 1.3rem;"><strong>Группа:</strong> PythonPro511</p>
+                <p class="mb-0 text-muted" style="font-size: 1.1rem;">Уфа, 2026 год</p>
+            </div>
+        </div>
+        <div class="slide-counter">01 / 09</div>
+    </section>
+
+    <!-- СЛАЙД 2: ПРЕДМЕТНАЯ ОБЛАСТЬ -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>🎯 ПРЕДМЕТНАЯ ОБЛАСТЬ</h2>
+            <h3>Онлайн-ритейл и умные e-commerce продажи</h3>
+            <p class="mb-4 text-muted" style="font-size: 1.4rem;">Современный рынок электронной коммерции требует перехода от статичных, неудобных фильтров каталога к интерактивному интеллектуальному взаимодействию с покупателем.</p>
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <div class="card-custom">
+                        <h4 class="accent-text mb-2">🧠 Умный подбор</h4>
+                        <p class="small">Покупатель описывает свои цели человеческим языком вместо долгого поиска по галочкам технических характеристик.</p>
+                        <div class="explain-box">🗣️ <b>Простым языком:</b> Вместо ручного выбора процессоров, пишем: <i>«нужен недорогой телефон для школьника»</i>, и сайт сам понимает задачу.</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom">
+                        <h4 class="accent-text mb-2">📄 Автоматизация</h4>
+                        <p class="small">Мгновенное формирование легитимных торговых инвойсов в формате PDF на стороне сервера при совершении платежной транзакции.</p>
+                        <div class="explain-box">🧾 <b>Простым языком:</b> Сразу после оплаты сайт автоматически генерирует красивый чек, который можно скачать и распечатать.</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom">
+                        <h4 class="accent-text mb-2">⚡ SPA-архитектура</h4>
+                        <p class="small">Полное отсутствие перезагрузок страниц сайта при навигации по разделам, асинхронном добавлении товаров в корзину и управлении профилем.</p>
+                        <div class="explain-box">🚀 <b>Простым языком:</b> Всё работает молниеносно на одной странице, как в мобильном приложении — без белых экранов и загрузок.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-counter">02 / 09</div>
+    </section>
+
+    <!-- СЛАЙД 3: ОБОСНОВАНИЕ -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>💡 ОБОСНОВАНИЕ РЕШЕНИЯ</h2>
+            <h3>Чем разработанная система отличается от готовых аналогов</h3>
+            <div class="table-responsive mt-4">
+                <table class="table table-dark table-striped table-bordered align-middle" style="font-size: 1.2rem; border-color: #23232e;">
+                    <thead>
+                        <tr style="background-color: #241442; color: #e0aaff;">
+                            <th class="p-3" style="width: 25%;">Критерий</th>
+                            <th class="p-3" style="width: 35%;">Стандартные магазины сегодня</th>
+                            <th class="p-3 table-primary text-dark" style="width: 40%;">Маркетплейс «Смартфон Shop»</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-3"><strong>Поиск товаров</strong></td>
+                            <td class="p-3 text-muted">❌ Долгий ручной подбор по десяткам галочек фильтров</td>
+                            <td class="p-3">✅ <strong>Гибридный RAG-движок:</strong> ИИ парсит интернет, сопоставляет параметры со складом и находит лучшее.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3"><strong>Роль ИИ-ботов</strong></td>
+                            <td class="p-3 text-muted">❌ Простые текстовые чат-боты ответов на FAQ</td>
+                            <td class="p-3">✅ <strong>Интеграция с UI витрины:</strong> Товарная сетка каталога на экране динамически перестраивается под советы ИИ.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3"><strong>Безопасность</strong></td>
+                            <td class="p-3 text-muted">❌ Зависимость от платных внешних облачных API-ключей</td>
+                            <td class="p-3">✅ <strong>Локальная изоляция:</strong> Нейросеть полностью развернута внутри закрытой Docker-сети проекта.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="explain-box mt-4">💡 <b>Простым языком:</b> Обычные чат-боты умеют только писать текст. Наш ИИ не просто общается, он управляет сайтом — сам находит нужные товары на складе и убирает лишнее с экрана, подстраивая магазин под клиента.</div>
+        </div>
+        <div class="slide-counter">03 / 09</div>
+    </section>
+
+    <!-- СЛАЙД 4: СТЕК ТЕХНОЛОГИЙ (ДОБАВЛЕН ЗНАЧОК REDIS С КИНЕТИЧЕСКИМ ЭФФЕКТОМ) -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>🛠 РЕАЛИЗАЦИЯ ПРОЕКТА</h2>
+            <h3 class="mb-4">Профессиональный стек технологий и инструментов (наведите мышь для интерактива)</h3>
+            <div class="text-center my-4">
+                <div class="badge-tech">🐍 Python 3.11</div>
+                <div class="badge-tech">⚡ Django Core</div>
+                <div class="badge-tech">🐘 СУБД PostgreSQL</div>
+                <div class="badge-tech">🛑 Кэш Redis Server</div>
+                <div class="badge-tech">🐳 Docker Compose</div>
+                <div class="badge-tech">🤖 Гибридный ИИ (Ollama + Llama 3.2 )</div>
+                <div class="badge-tech">📜 Vanilla JS (AJAX)</div>
+                <div class="badge-tech">🎨 Bootstrap 5 CSS</div>
+                <div class="badge-tech">📄 ReportLab Engine</div>
+            </div>
+            <div class="explain-box mt-5">🛠️ <b>Простым языком:</b> Проект собран на базе Python и Django. За управление базой данных отвечает надежная СУБД PostgreSQL, сервер Redis мгновенно обрабатывает кэш-запросы сессий, интерфейс оживлен при помощи JavaScript, а искусственный интеллект совмещает живой поиск обзоров по всему интернету с локальной аналитикой твоего склада в Docker.</div>
+        </div>
+        <div class="slide-counter">04 / 09</div>
+    </section>
+
+    <!-- СЛАЙД 5: ИННОВАЦИОННЫЕ ФУНКЦИИ И ОПТИМИЗАЦИЯ -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>🏗 ИННОВАЦИОННЫЕ ФУНКЦИИ И ОПТИМИЗАЦИЯ</h2>
+            <h3>Глубокая инженерная проработка ИИ-ассистента и бэкенд-логики</h3>
+            <div class="row g-4 mt-2">
+                <div class="col-md-6">
+                    <div class="card-custom">
+                        <h5 class="accent-text">✨ Сложные ТТХ простым языком</h5>
+                        <p class="small">Интегрирована функция семантического перевода сложных аппаратных спецификаций. ИИ преобразует непонятные пользователю аббревиатуры процессоров и матриц в понятные жизненные сценарии.</p>
+                        <div class="explain-box" style="border-left-color: #9d4edd; background: rgba(157,78,221,0.04); color: #d8bbff;">🗣️ <b>Пример работы функции:</b> Вместо сухой строки <i>«MediaTek Helio G99, IPS 120Hz»</i> ИИ выводит: <b>«Отлично потянет любые современные игры и обеспечит очень плавное пролистывание меню»</b>.</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-custom">
+                        <h5 class="accent-text">🔄 Паттерн RAG (Retrieval-Augmented Generation)</h5>
+                        <p class="small">Динамическое обогащение промпта нейросети Ollama актуальными складскими остатками из PostgreSQL непосредственно перед отправкой запроса.</p>
+                        <div class="explain-box">🧠 <b>Простым языком:</b> ИИ не фантазирует — перед ответом бэкенд передает нейросети точный список и цены моделей, которые прямо сейчас есть у нас в наличии на складе.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-counter">05 / 09</div>
+    </section>
+
+    <!-- СЛАЙД 6: ЦВЕТНАЯ ТЕКСТОВАЯ СХЕМА ВЗАИМОДЕЙСТВИЯ С ИКОНКАМИ -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>📊 СХЕМА ВЗАИМОДЕЙСТВИЯ КОМПОНЕНТОВ</h2>
+            <h3>Оркестрация и изолированная сетевая инфраструктура Docker Compose</h3>
+
+            <!-- Сохраняем псевдографику, интегрируем значки внутрь рамок -->
+            <pre class="mt-4" style="background: #09090d; border-color: #1a1a24; font-size: 1.15rem; line-height: 1.4; padding: 30px; font-family: 'Courier New', monospace;">
+<span style="color: #00b4d8;">┌────────────────────────────────────────────────────────┐
+│         🌐 Фронтенд-клиент (Браузер / JS / AJAX)       │
+└───────────────────────────┬────────────────────────────┘</span>
+                            <span style="color: #555566;">│</span>
+                            <span style="color: #9d4edd;">▼ (HTTP REST API / JSON POST)</span>
+<span style="color: #9d4edd;">┌────────────────────────────────────────────────────────┐
+│             ⚡ Django бэкенд Core (web-контейнер)      │
+└───────────────┬───────────────────────────▲────────────┘</span>
+                <span style="color: #555566;">│</span>                           <span style="color: #555566;">│</span>
+                <span style="color: #ffb703;">▼ (Django ORM)</span>              <span style="color: #28a745;">▼▲ (Internal API / Prompt RAG)</span>
+<span style="color: #ffb703;">┌───────────────────────────┐   ┌────────────────────────────┐
+│    🐘 СУБД PostgreSQL     │   │    🤖 Микросервис Ollama   │
+│ (каталог, заказы, сессии) │   │        (ai_ollama)         │
+└───────────────┬───────────┘   └────────────────────────────┘</span>
+                <span style="color: #555566;">│</span>
+                <span style="color: #e63946;">▼ (Данные заказа для чека)</span>
+<span style="color: #e63946;">┌────────────────────────────────────────────────────────┐
+│  📄 Генератор ReportLab (Выдача бинарного PDF-ответа)  │
+└────────────────────────────────────────────────────────┘</span></pre>
+
+            <div class="explain-box mt-4" style="border-left-color: #9d4edd; background: rgba(157, 78, 221, 0.05); color: #d8bbff;">📡 <b>Простым языком:</b> Покупатель кликает кнопку подбора ➡️ <span style="color: #00b4d8; font-weight: bold;">Браузер</span> посылает сигнал на <span style="color: #9d4edd; font-weight: bold;">сервер Django</span> ➡️ Сервер вытаскивает остатки из базы данных <span style="color: #ffb703; font-weight: bold;">PostgreSQL</span>, упаковывает их и передает локальному <span style="color: #28a745; font-weight: bold;">ИИ Ollama</span> ➡️ ИИ мгновенно возвращает очищенный текст, а <span style="color: #e63946; font-weight: bold;">ReportLab</span> генерирует PDF-чек. Всё работает изолированно внутри Docker!</div>
+        </div>
+        <div class="slide-counter">06 / 09</div>
+    </section>
+
+
+    <!-- СЛАЙД 7: ИДЕАЛЬНАЯ ER-ДИАГРАММА С ПОЛНЫМИ СВЯЗЯМИ 1:M -->
+    <section class="slide">
+        <div class="slide-content" style="display: block; text-align: left;">
+            <h2>🗄 СТРУКТУРА БАЗЫ ДАННЫХ (ER-ДИАГРАММА)</h2>
+            <h3>Реляционные сущности, типы полей и архитектурные связи в СУБД PostgreSQL</h3>
+
+            <!-- Табличный неразрушимый каркас горизонтального выравнивания -->
+            <table style="width: 100%; border-collapse: separate; border-spacing: 40px 0px; margin-top: 15px; text-align: left;">
+
+                <!-- РЯД 1: ГЛАВНЫЕ ТАБЛИЦЫ (РОДИТЕЛИ) -->
+                <tr>
+                    <td style="width: 50%; vertical-align: top;">
+                        <div class="db-table table-user" style="width: 100%; max-width: 440px; margin: 0 auto;">
+                            <div class="db-header text-info">👤 User (Таблица аккаунтов)</div>
+                            <div class="db-field"><span class="db-pk">🔑 id [PK]</span><span class="db-type">BigInt</span></div>
+                            <div class="db-field"><span>username</span><span class="db-type">Varchar</span></div>
+                            <div class="db-field"><span>email</span><span class="db-type">String</span></div>
+                            <div class="db-field"><span>password</span><span class="db-type">Hash</span></div>
+                        </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top;">
+                        <div class="db-table table-product" style="width: 100%; max-width: 440px; margin: 0 auto;">
+                            <div class="db-header text-success">📦 Product (Каталог товаров)</div>
+                            <div class="db-field"><span class="db-pk">🔑 id [PK]</span><span class="db-type">BigInt</span></div>
+                            <div class="db-field"><span>name</span><span class="db-type">Varchar</span></div>
+                            <div class="db-field"><span>price</span><span class="db-type">Decimal</span></div>
+                            <div class="db-field"><span>is_available</span><span class="db-type">Boolean</span></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- РЯД 2: ИДЕАЛЬНО ВЫРОВНЕННЫЕ СВЯЗИ (ИНТЕГРИРОВАНЫ ВСЕ СВЯЗИ 1:M) -->
+                <tr>
+                    <td style="vertical-align: top; padding: 15px 0; text-align: center;">
+                        <div style="font-family: monospace; font-size: 1.3rem; font-weight: bold; color: #e63946; line-height: 1.2;">
+                            <span style="color: #00b4d8;">▲ Связь (1:M) к User </span> │ <span style="color: #ffb703;"> Сплит-связь (1:M) ──┐</span><br>
+                            <span style="color: #00b4d8;">│</span><span style="color: #ffb703;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│</span><br>
+                            <span style="color: #e63946;">▼ (вниз к Order)</span><span style="color: #ffb703;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼ (вправо к CartItem)</span><br>
+                            <span style="font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; color: #aaa; display: inline-block; max-width: 420px; text-align: left; background: rgba(0,180,216,0.03); padding: 8px 12px; border-radius: 8px; border: 1px dashed rgba(0,180,216,0.2); margin-top: 5px;">
+                                🔷 <b>Связи сущности User:</b><br>
+                                1. <b>User ➡️ Order (1:M):</b> Клиент имеет историю заказов.<br>
+                                2. <b>User ➡️ CartItem (1:M):</b> Уникальная изолированная корзина текущей сессии пользователя.
+                            </span>
+                        </div>
+                    </td>
+                    <td style="vertical-align: top; padding: 15px 0; text-align: center;">
+                        <div style="font-family: monospace; font-size: 1.3rem; font-weight: bold; color: #28a745; line-height: 1.2;">
+                            ▲ Связь (1:M) к Product<br>│<br>│<br>
+                            <span style="font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; color: #aaa; display: inline-block; max-width: 420px; text-align: center; background: rgba(40,167,69,0.03); padding: 8px 12px; border-radius: 8px; border: 1px dashed rgba(40,167,69,0.2); margin-top: 5px;">
+                                🔶 <b>Связь сущности Product:</b><br>
+                                <b>Product ➡️ CartItem (1:M):</b> Один и тот же смартфон из каталога может быть добавлен в корзины разным клиентам.
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+
+                                <!-- РЯД 3: ЗАВИСИМЫЕ ТАБЛИЦЫ (СИММЕТРИЧНОЕ СВЯЗЫВАНИЕ) -->
+                <tr>
+                    <td style="vertical-align: top;">
+                        <!-- Таблица Заказы — строго слева, под User -->
+                        <div class="db-table table-order" style="width: 100%; max-width: 440px; margin: 0 auto;">
+                            <div class="db-header text-danger">🧾 Order (Журнал заказов)</div>
+                            <div class="db-field"><span class="db-pk">🔑 id [PK]</span><span class="db-type">BigInt</span></div>
+                            <div class="db-field" style="background: rgba(0, 180, 216, 0.08);"><span class="db-fk">🔷 user_id</span><span class="db-type text-info">FK ➡️ User.id</span></div>
+                            <div class="db-field"><span>total_price</span><span class="db-type">Decimal</span></div>
+                            <div class="db-field"><span>is_paid</span><span class="db-type">Boolean</span></div>
+                            <div class="db-field" style="color: #ffb703;"><span>created_at</span><span class="db-type">DateTime (UTC)</span></div>
+                        </div>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <!-- Таблица Корзина — строго справа, под Product -->
+                        <div class="db-table table-cart" style="width: 100%; max-width: 440px; margin: 0 auto;">
+                            <div class="db-header text-warning">🛒 CartItem (Элементы корзины)</div>
+                            <div class="db-field"><span class="db-pk">🔑 id [PK]</span><span class="db-type">BigInt</span></div>
+                            <div class="db-field" style="background: rgba(0, 180, 216, 0.08);"><span class="db-fk">🔷 user_id</span><span class="db-type text-info">FK ➡️ User.id</span></div>
+                            <div class="db-field" style="background: rgba(40, 167, 69, 0.08);"><span class="db-fk">🔶 product_id</span><span class="db-type text-success">FK ➡️ Product.id</span></div>
+                            <div class="db-field"><span>quantity</span><span class="db-type">Integer</span></div>
+                        </div>
+
+                        <!-- Горизонтальный мостик миграции данных корзины при оплате -->
+                        <div class="d-none d-md-block text-center mt-3" style="font-family: monospace; font-size: 1.2rem; font-weight: bold; color: #28a745; line-height: 1.2; margin-right: 40px;">
+                            ◄─────────────────── Миграция данных при оплате заказа<br>
+                            <span class="d-inline-block p-2 mt-1 rounded bg-dark border border-success" style="font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500; color: #ccc; max-width: 440px; --bs-bg-opacity: .4;">
+                                🧾 При успешной оплате скрипт бэкенда переносит выбранные `product_id` из корзины в чек таблицы <b>Order</b> и очищает сессию.
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- БЛОК С РЕЗЮМЕ В САМОМ НИЗУ -->
+            <div class="explain-box mt-4" style="background: rgba(40, 167, 69, 0.06); border-left: 4px solid #28a745; padding: 15px 20px; border-radius: 0 12px 12px 0; text-align: left;">
+                🗄️ <b>Архитектурное резюме СУБД:</b> Инфологическая структура базы данных спроектирована в соответствии с требованиями <b>третьей нормальной формы (3NF)</b>. Наличие строгих ограничений целостности через внешние ключи <i>(Foreign Key)</i> полностью ликвидирует избычность данных и исключает аномалии обновления. Это гарантирует абсолютную <b>транзакционную безопасность</b> при асинхронной работе корзины, формировании гибридного ИИ-контекста и генерации серверных ReportLab PDF-инвойсов.
+            </div>
+        </div>
+        <div class="slide-counter">07 / 09</div>
+    </section>
+
+
+
+    <!-- СЛАЙД 8: ИТОГИ -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>🏆 ИТОГИ РАЗРАБОТКИ</h2>
+            <h3>Полное соответствие проекта критериям технического задания</h3>
+            <div class="row g-4 mt-3" style="font-size: 1.25rem;">
+                <div class="col-md-6">
+                    <div class="p-3 border border-success rounded bg-dark h-100" style="--bs-bg-opacity: .4;">
+                        🟢 <b>Клиент и сервер:</b> Быстрый Django-бэкенд и живой асинхронный фронтенд на чистом JavaScript.
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border border-success rounded bg-dark h-100" style="--bs-bg-opacity: .4;">
+                        🟢 <b>ИИ-подборщик:</b> Умный RAG-ассистент с уникальной функцией «Простым языком» и авто-фильтрацией UI.
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-4 border border-success rounded bg-dark h-100" style="--bs-bg-opacity: .4;">
+                        🟢 <b>Документооборот:</b> Моментальная выписка PDF-чеков со встроенной защитой кириллицы через транслитерацию.
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-4 border border-success rounded bg-dark h-100" style="--bs-bg-opacity: .4;">
+                        🟢 <b>Контейнеризация:</b> Сборка и развертывание проекта одной системной командой Docker.
+                    </div>
+                </div>
+            </div>
+            <div class="explain-box mt-4">⭐ <b>Простым языком:</b> Разработан полноценный, современный интернет-магазин, усиленный собственным искусственным интеллектом, уникальной функцией "Простым языком" для технических характеристик, автоматической выдачей документов и развертыванием в один клик.</div>
+        </div>
+        <div class="slide-counter">08 / 09</div>
+    </section>
+
+    <!-- СЛАЙД 9: МАСШТАБИРУЕМОСТЬ И ПЕРСПЕКТИВЫ РАЗВИТИЯ -->
+    <section class="slide">
+        <div class="slide-content">
+            <h2>🚀 МАСШТАБИРУЕМОСТЬ И ПЕРСПЕКТИВЫ РАЗВИТИЯ</h2>
+            <h3>Коммерческое масштабирование и ИИ-модернизация платформы</h3>
+            <p class="mb-4 text-muted" style="font-size: 1.35rem;">Разработанная архитектура Смартфон Shop имеет высокий потенциал для дальнейшего enterprise-развития и монетизации по трем направлениям:</p>
+
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <div class="card-custom" style="border-color: rgba(0, 180, 216, 0.3);">
+                        <h4 style="color: #00b4d8;" class="mb-3">🌐 Модель Multi-Vendor</h4>
+                        <p class="small">Модернизация базы данных PostgreSQL и личного кабинета для регистрации сторонних продавцов (ритейлеров). Трансформация локального магазина в полноценный открытый маркетплейс электроники масштаба Ozon или Wildberries.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom" style="border-color: rgba(40, 167, 69, 0.3);">
+                        <h4 style="color: #28a745;" class="mb-3">🎙️ Voice-to-Text подбор</h4>
+                        <p class="small">Интеграция браузерного Web Speech API для распознавания речи. Покупатели (включая пожилых людей) смогут осуществлять гибридный ИИ-подбор смартфонов при помощи простых голосовых команд без ввода текста.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-custom" style="border-color: rgba(255, 183, 3, 0.3);">
+                        <h4 style="color: #ffb703;" class="mb-3">📊 ИИ-аналитика для бизнеса</h4>
+                        <p class="small">Интеграция предиктивных алгоритмов машинного обучения в Django-админку. Система сможет автоматически анализировать историю заказов и прогнозировать спрос на дефицитные модели смартфонов.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explain-box mt-5" style="border-left-color: #28a745; background: rgba(40, 167, 69, 0.05); color: #a2e8b7;">📈 <b>Простым языком:</b> В будущем сайт сможет принимать тысячи продавцов, понимать голосовые команды покупателей на лету и автоматически подсказывать владельцу магазина, какие смартфоны нужно срочно заказать на склад, основываясь на анализе прошлых продаж.</div>
+        </div>
+        <div class="slide-counter">09 / 09</div>
+    </section>
+
+</body>
+</html>
+

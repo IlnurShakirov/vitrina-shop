@@ -4,12 +4,21 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-5">
-        <div class="card p-4 shadow-sm border-0 mt-5 bg-white">
+        <div class="card p-4 shadow-sm border-0 mt-5 bg-white" style="border-radius: 15px;">
             <h3 class="mb-4 text-center fw-bold text-dark">Создать аккаунт</h3>
-            <form method="post">
+            <form method="post" id="register-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-3">Зарегистрироваться</button>
+
+                <!-- Интерактивный переключатель видимости ОБОИХ паролей -->
+                <div class="form-check mt-1 mb-3 text-start">
+                    <input class="form-check-input" type="checkbox" id="togglePasswordRegister" style="cursor: pointer;">
+                    <label class="form-check-label text-muted small fw-bold" for="togglePasswordRegister" style="cursor: pointer; user-select: none;">
+                        👁 Показать пароли
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-2" style="border-radius: 10px;">Зарегистрироваться</button>
             </form>
             <div class="text-center mt-3">
                 <a href="{% url 'shop:login' %}" class="text-decoration-none small text-primary">Уже есть аккаунт? Войти</a>
@@ -19,3 +28,32 @@
 </div>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll("#register-form input[type='text'], #register-form input[type='password'], #register-form input[type='email']");
+        inputs.forEach(input => {
+            input.classList.add("form-control", "mb-3");
+            // Задаем красивое скругление для инпутов, как и на форме входа
+            input.style.borderRadius = "10px";
+        });
+
+        // Скрипт одновременного маскирования/демаскирования основного и повторного паролей
+        const toggleCheckboxRegister = document.getElementById('togglePasswordRegister');
+        if (toggleCheckboxRegister) {
+            toggleCheckboxRegister.addEventListener('change', function() {
+                // Находим ВСЕ поля ввода на форме, которые имеют тип password или содержат слово password в имени
+                const passwordFields = document.querySelectorAll("#register-form input[type='password'], #register-form input[name*='password']");
+
+                passwordFields.forEach(field => {
+                    if (this.checked) {
+                        field.type = 'text';      // Снимаем маску — оба пароля видны
+                    } else {
+                        field.type = 'password';  // Скрываем обратно в точки
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

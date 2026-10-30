@@ -1,0 +1,237 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Главная — Смартфон Shop{% endblock %}
+
+{% block content %}
+<!-- Основной контент SPA-интерфейса -->
+<div class="container" id="app-root" style="margin-top: 10px;">
+    <div class="row">
+
+        <!-- Левая колонка: Сайдбар фильтров -->
+        <div class="col-md-3 mb-4">
+
+            <!-- БЛОК ИНТЕЛЛЕКТУАЛЬНОГО ИИ-ПОДБОРЩИКА СМАРТФОНОВ-->
+            <div class="card p-3 shadow-sm border-0 mb-4" style="border-radius: 15px; background-color: #f3ebff; border: 1px dashed #6f42c1 !important;">
+                <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="color: #4b2880; font-size: 1.05rem;">
+                    <span>✨</span> ИИ-Подборщик
+                </h5>
+                <p class="text-muted mb-3" style="font-size: 0.75rem; color: #6a40a4 !important;">Опишите идеальный смартфон человеческим языком (для кого, цели, бюджет):</p>
+
+                <div class="mb-2">
+                    <textarea id="ai-assistant-input" class="form-control form-control-sm border-0 shadow-sm" rows="2" placeholder="Например: телефон для ребенка, чтобы тянул Roblox, до 25000" style="border-radius: 10px; font-size: 0.8rem; background-color: #fff; color: #000;"></textarea>
+                </div>
+                <button id="btn-ai-assist" class="btn btn-sm w-100 fw-bold py-2 text-white" style="border-radius: 10px; background-color: #6f42c1;">
+                    🧠 Подобрать смартфоны
+                </button>
+
+            </div>
+
+            <!-- Обычный фильтр товаров -->
+            <div class="card p-3 shadow-sm border-0 mb-4 bg-white" style="border-radius: 15px;">
+                <h5 class="fw-bold mb-3 text-dark">Фильтр товаров</h5>
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold" style="font-size: 0.75rem;">ПОИСК</label>
+                    <input type="text" id="search-input" class="form-control" placeholder="Поиск смартфона..." style="border-radius: 10px;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold" style="font-size: 0.75rem;">МАКС. ЦЕНА</label>
+                    <input type="number" id="price-input" class="form-control" placeholder="Цена до... ₽" style="border-radius: 10px;">
+                </div>
+                <button id="btn-filter" class="btn btn-primary w-100 fw-bold py-2" style="border-radius: 10px;">Применить</button>
+            </div>
+
+            <h5 class="fw-bold mb-3 text-dark">Категории</h5>
+            <div class="list-group shadow-sm border-0" id="categories-list" style="border-radius: 15px; overflow: hidden;">
+                <!-- Загружается динамически через JavaScript (app.js) -->
+            </div>
+        </div>
+
+        <!-- Правая колонка: Главная витрина товаров маркетплейса -->
+        <div class="col-md-9">
+            <div id="popular-section"></div>
+
+            <!-- Широкий и крупный ИИ-Баннер по центру страницы  -->
+
+            <div id="ai-assistant-verdict" class="mb-4 d-none p-4 rounded shadow-sm text-dark"
+                 style="font-size: 1.15rem; line-height: 1.6; background-color: #f6f0ff; border-left: 6px solid #6f42c1; color: #1a0b36; font-family: system-ui, -apple-system, sans-serif; width: 100%;">
+            </div>
+
+            <!-- БЛОК СОРТИРОВКИ СМАРТФОНОВ СО СКРИНШОТА -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h4 class="fw-bold text-dark mb-0">Все товары в наличии</h4>
+                <div class="dropdown">
+                    <button class="btn btn-white border shadow-sm dropdown-toggle fw-bold" type="button" id="sortDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 12px; font-size: 0.9rem; padding: 8px 16px; background-color: #fff;">
+                        📊 Популярные
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" aria-labelledby="sortDropdownBtn" style="border-radius: 15px;" id="sort-options-list">
+                        <li><a class="dropdown-item rounded active fw-bold py-2" href="#" data-sort="popular">🔘 Популярные</a></li>
+                        <li><a class="dropdown-item rounded fw-bold py-2" href="#" data-sort="cheap">⚪ Дешевле</a></li>
+                        <li><a class="dropdown-item rounded fw-bold py-2" href="#" data-sort="expensive">⚪ Дороже</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row" id="products-grid">
+                <!-- Карточки смартфонов рендерит JavaScript (app.js) -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- МОДАЛЬНОЕ ОКНО ДЕТАЛЬНОГО ПРОСМОТРА СМАРТФОНА С ОТЗЫВАМИ И ОЦЕНКАМИ -->
+
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 25px; border: none; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+            <div class="modal-body p-0">
+                <div class="row m-0">
+
+                    <!-- Левая колонка модалки: Карусель/Слайдер картинок девайса -->
+                    <div class="col-md-6 bg-light p-5 d-flex align-items-center justify-content-center" style="min-height: 550px;">
+                        <div id="productCarousel" class="carousel slide w-100" data-bs-ride="carousel">
+                            <div class="carousel-inner" id="carousel-images-container">
+                                <!-- Сюда JavaScript подставит слайды -->
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Правая колонка модалки: Характеристики, ИИ-аналитика и Блок отзывов -->
+                    <div class="col-md-6 p-5 d-flex flex-column justify-content-between" style="min-height: 550px; max-height: 750px; overflow-y: auto;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h3 class="fw-bold text-dark mb-0" id="modal-product-name">Название устройства</h3>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <h4 class="text-success fw-bold my-2" id="modal-product-price">0 ₽</h4>
+
+                            <!-- КНОПКА ИИ-ПЕРЕВОДЧИКА ХАРАКТЕРИСТИК -->
+                            <button id="ai-translate-btn" class="btn btn-sm btn-outline-purple mb-3 w-100 fw-bold d-flex align-items-center justify-content-center gap-2" style="border-color: #6f42c1; color: #6f42c1; border-radius: 10px; padding: 8px;">
+                                <span>✨</span> Объясни мне этот смартфон (ИИ)
+                            </button>
+
+                            <!-- БЛОК ДЛЯ ОТВЕТА ИИ-АНАЛИТИКИ -->
+                            <div id="ai-response-box" class="alert alert-purple d-none mb-3 small" style="background-color: #f3ebff; border: 1px dashed #6f42c1; color: #4b2880; border-radius: 12px;">
+                                <!-- Сюда сгенерируется ИИ-ответ -->
+                            </div>
+
+                            <!-- ТУМБЛЕР ПЕРЕКЛЮЧЕНИЯ РЕЖИМОВ ОПИСАНИЯ -->
+                            <div class="d-flex align-items-center justify-content-between bg-light p-2 mb-3 shadow-sm" style="border-radius: 12px;">
+                                <span class="small fw-bold text-muted ps-2" style="font-size: 0.8rem;">Язык описания:</span>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <input type="radio" class="btn-check" name="tech-mode" id="mode-pro" autocomplete="off" checked>
+                                    <label class="btn btn-outline-dark fw-bold px-3" for="mode-pro">⚙️ Для профи</label>
+
+                                    <input type="radio" class="btn-check" name="tech-mode" id="mode-simple" autocomplete="off">
+                                    <label class="btn btn-outline-primary fw-bold px-3" for="mode-simple">💡 Простым языком</label>
+                                </div>
+                            </div>
+
+                            <!-- КОНТЕНТ ТЕХНИЧЕСКИХ ХАРАКТЕРИСТИК СМАРТФОНА -->
+                            <div id="tech-content-container" class="mb-2">
+                                <!-- Рендерится через JS (Таблица характеристик или ИИ-сценарии) -->
+                            </div>
+                        </div>
+
+                        <!-- БЛОК ОТЗЫВОВ И ПЯТИЗВЕЗДОЧНЫХ ОЦЕНОК ПОКУПАТЕЛЕЙ -->
+
+                        <div>
+                            <hr class="my-3">
+                            <h5 class="fw-bold text-dark mb-2" style="font-size: 1.05rem;">⭐ Рейтинг модели: <span id="modal-product-rating-val">0.0</span> / 5</h5>
+
+                            <!-- Прокручиваемый список опубликованных отзывов -->
+                            <div id="modal-reviews-list" class="mb-3" style="max-height: 160px; overflow-y: auto; display: block !important;">
+                                <!-- Сюда JS подставит отзывы -->
+                            </div>
+
+                            <!-- Форма отправки отзыва (видна только авторизованным) -->
+                            <div id="modal-review-form-block" class="bg-light p-3 rounded mb-3 d-none" style="border-radius: 12px; border: 1px solid #e9ecef;">
+                                <h6 class="fw-bold mb-2 text-dark" style="font-size: 0.85rem;">Оставить честный отзыв</h6>
+                                <div class="mb-2">
+                                    <label class="small fw-bold text-muted d-block mb-1" style="font-size: 0.7rem;">ВАША ОЦЕНКА СМАРТФОНА:</label>
+                                    <select id="review-rating-select" class="form-select form-select-sm" style="border-radius: 8px; font-weight: 500;">
+                                        <option value="5">⭐⭐⭐⭐⭐ (5 звезд)</option>
+                                        <option value="4">⭐⭐⭐⭐ (4 звезды)</option>
+                                        <option value="3">⭐⭐⭐ (3 звезды)</option>
+                                        <option value="2">⭐⭐ (2 звезды)</option>
+                                        <option value="1">⭐ (1 звезда)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <textarea id="review-text-input" class="form-control form-control-sm" rows="2" placeholder="Напишите честный отзыв о качестве смартфона, экране, батарее..." style="border-radius: 8px; font-size: 0.85rem;"></textarea>
+                                </div>
+                                <button id="btn-submit-review" class="btn btn-primary btn-sm w-100 fw-bold py-1.5" style="border-radius: 8px;">🚀 Отправить отзыв на модерацию</button>
+                            </div>
+
+                            <!-- Предупреждающая заглушка для неавторизованных гостей -->
+                            <div id="modal-review-auth-alert" class="alert alert-warning py-2 small mb-3 text-center d-none" style="border-radius: 12px; font-size: 0.8rem; font-weight: 500;">
+                                Чтобы поставить оценку и оставить отзыв, пожалуйста, войдите в аккаунт.
+                            </div>
+
+                            <!-- Интерактивная кнопка покупки / добавления в корзину -->
+                            <div id="modal-product-actions" class="mt-auto">
+                                <!-- Рендерится через JS (Купить смартфон / В корзине ✓) -->
+                            </div>
+                        </div>
+
+                    </div><!-- /.col-md-6 правая колонка модалки -->
+                </div><!-- /.row -->
+            </div><!-- /.modal-body -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal#productDetailModal -->
+
+
+<!-- МОДАЛЬНОЕ ОКНО ИЗБРАННОГО (❤️) -->
+
+<div class="modal fade" id="favModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 20px; border: none;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-dark">❤️ Ваше Избранное</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="fav-items-list">
+                    <!-- Сюда JavaScript подставит избранные товары -->
+                </ul>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Продолжить покупки</button>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal#favModal -->
+
+
+<!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ И ОПЛАТЫ -->
+
+<div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">🛒 Ваша корзина</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group mb-3" id="cart-items-list">
+                    <!-- Элементы корзины -->
+                </ul>
+                <div class="text-end fw-bold fs-5">Итого: <span id="cart-total-price">0</span> ₽</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Продолжить покупки</button>
+                <button type="button" id="btn-checkout" class="btn btn-success fw-bold">💳 Оплатить заказ</button>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal#cartModal -->
+
+{% endblock %}

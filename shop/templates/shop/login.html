@@ -4,12 +4,21 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-4">
-        <div class="card p-4 shadow-sm border-0 mt-5 bg-white">
+        <div class="card p-4 shadow-sm border-0 mt-5 bg-white" style="border-radius: 15px;">
             <h3 class="mb-4 text-center fw-bold text-dark">Вход на сайт</h3>
-            <form method="post">
+            <form method="post" id="login-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-primary w-100 fw-bold py-2 mt-3">Войти</button>
+
+                <!-- Интерактивный переключатель видимости пароля -->
+                <div class="form-check mt-1 mb-3 text-start">
+                    <input class="form-check-input" type="checkbox" id="togglePasswordLogin" style="cursor: pointer;">
+                    <label class="form-check-label text-muted small fw-bold" for="togglePasswordLogin" style="cursor: pointer; user-select: none;">
+                        👁 Показать пароль
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-2 mt-2" style="border-radius: 10px;">Войти</button>
             </form>
             <div class="text-center mt-3">
                 <a href="{% url 'shop:register' %}" class="text-decoration-none small text-primary">Нет аккаунта? Регистрация</a>
@@ -19,3 +28,31 @@
 </div>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll("#login-form input[type='text'], #login-form input[type='password']");
+        inputs.forEach(input => {
+            input.classList.add("form-control", "mb-3");
+            // Задаем красивое скругление для инпутов, как и у кнопок маркетплейса
+            input.style.borderRadius = "10px";
+        });
+
+        // Скрипт мгновенного шифрования/демаскирования пароля при клике
+        const toggleCheckbox = document.getElementById('togglePasswordLogin');
+        if (toggleCheckbox) {
+            toggleCheckbox.addEventListener('change', function() {
+                // Ищем инпут пароля внутри нашей формы
+                const passwordInput = document.querySelector("#login-form input[type='password'], #login-form input[name='password']");
+                if (passwordInput) {
+                    if (this.checked) {
+                        passwordInput.type = 'text';      // Снимаем маску — пароль виден
+                    } else {
+                        passwordInput.type = 'password';  // Маскируем обратно в точки
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

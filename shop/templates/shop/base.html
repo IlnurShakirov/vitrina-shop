@@ -1,38 +1,190 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Витрина{% endblock %}</title>
-    <!-- Локальные файлы, которые гарантированно загрузятся без интернета -->
+    <title>{% block title %}Смартфон Shop{% endblock %}</title>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <!-- Добавляем локальное чтение иконок, которые вы только что сохранили -->
-    <link href="{% static 'css/bootstrap-icons.min.css' %}" rel="stylesheet">
-</head>
+    <link class="favicon-icon" rel="icon" href="data:," type="image/x-icon">
 
+    <style>
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            margin-bottom: 25px;
+        }
+        .profile-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+        .profile-subtitle {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .profile-input-box {
+            background-color: #f1f3f5;
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            border: none;
+        }
+        .profile-input-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 2px;
+            display: block;
+        }
+        .profile-input-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #212529;
+        }
+        .gender-switch {
+            background-color: #f1f3f5;
+            border-radius: 15px;
+            padding: 12px 25px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .alert-purple {
+            background-color: #f3ebff;
+            border: 1px dashed #6f42c1;
+            color: #4b2880;
+            border-radius: 12px;
+        }
+        /* Плавная анимация изменения цвета ссылок в подвале сайта при наведении */
+        .hover-purple:hover {
+            color: #9d4edd !important;
+            transition: 0.2s ease-in-out;
+        }
+    </style>
+</head>
 <body class="bg-light">
 
+    <div style="display: none;">
+        {% csrf_token %}
+    </div>
+
+    <!-- Основная шапка (Клиентская часть маркетплейса) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'shop:product_list' %}">Магазин "Витрина"</a>
-            <div class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                    <span class="navbar-text me-3 text-white">Привет, <strong>{{ user.username }}</strong>!</span>
-                    <a class="btn btn-outline-danger btn-sm px-3" href="{% url 'shop:logout' %}">Выйти</a>
-                {% else %}
-                    <a class="nav-link text-white me-2" href="{% url 'shop:login' %}">Войти</a>
-                    <a class="btn btn-primary btn-sm px-3" href="{% url 'shop:register' %}">Регистрация</a>
-                {% endif %}
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/" id="brand-logo">
+                <span>📱</span> Смартфон Shop
+            </a>
+
+            <!-- Блок с кнопкой-тумблером темы перед блоком авторизации -->
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <button id="theme-toggle-btn" class="btn btn-outline-light d-flex align-items-center gap-2 px-3 py-1.5" style="border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                    <span id="theme-toggle-icon">🌙</span> <span id="theme-toggle-text">Тёмная тема</span>
+                </button>
+
+                <div class="navbar-nav" id="auth-block">
+                </div>
             </div>
         </div>
     </nav>
 
-        <div class="container">
+    <!-- Вывод динамического контента SPA-приложения -->
+    <div class="container">
         {% block content %}{% endblock %}
     </div>
+
+    <!-- Профессиональный лаконичный черный футер (г. Уфа, 2026)   -->
+
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5" style="font-family: system-ui, -apple-system, sans-serif; border-top: 4px solid #6f42c1;">
+        <div class="container text-center text-md-start">
+            <div class="row d-flex justify-content-between">
+
+                <!-- Колонна 1: О бренде маркетплейса (Расширили до col-md-5 для баланса) -->
+                <div class="col-md-5 col-lg-5 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold" style="color: #9d4edd; font-size: 1.1rem;">📱 Смартфон Shop</h5>
+                    <p class="small text-secondary" style="line-height: 1.6;">
+                        Высокотехнологичный маркетплейс цифровой техники с интегрированным гибридным искусственным интеллектом всемирного поиска на базе RAG-архитектуры.
+                    </p>
+                </div>
+
+                <!-- Колонна 2: Юридические реквизиты и Контакты в г. УФА  -->
+                <div class="col-md-5 col-lg-4 mx-auto mt-3 text-md-end text-center">
+                    <h5 class="text-uppercase mb-4 fw-bold text-white" style="font-size: 0.9rem; letter-spacing: 1px;">📞 КОНТАКТЫ</h5>
+                    <p class="small text-secondary mb-2">📍 <b>Город:</b> г. Уфа, ул. Менделеева, д. 134</p>
+                    <p class="small text-secondary mb-2">📧 <b>Email:</b> sales@smartphone-shop.ru</p>
+                    <p class="small text-secondary mb-2">📱 <b>Тел:</b> +7 (347) 222-45-67</p>
+                    <p class="small text-secondary mb-0">🏢 <b>Организация:</b> ООО «Смартфон Шоп»</p>
+                </div>
+
+            </div>
+
+            <hr class="mb-4 mt-4" style="border-color: #444;">
+
+            <!-- Нижняя строчка: Защита права, Актуальный Год и Твое имя -->
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p class="small text-secondary mb-0">
+                        © 2026 ООО «Смартфон Шоп». Все права защищены. Информационная система маркетплейса официально зарегистрирована в реестре ПО РФ.
+                    </p>
+                </div>
+                <div class="col-md-5 col-lg-4 text-center text-md-end mt-2 mt-md-0">
+                    <span class="small text-muted">Разработано в рамках ВКР · Shakirov I.D.</span>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Плавающая интерактивная кнопка «Наверх» -->
+
+    <button id="btn-scroll-to-top" class="btn btn-dark position-fixed text-white shadow"
+            style="bottom: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; display: none; z-index: 1000; border: 2px solid #6f42c1; font-size: 1.25rem; line-height: 1; padding: 0; transition: all 0.3s ease-in-out;">
+        ↑
+    </button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const scrollTopBtn = document.getElementById("btn-scroll-to-top");
+
+            if (scrollTopBtn) {
+                // Отслеживаем скроллинг страницы пользователем
+                window.addEventListener("scroll", function() {
+                    // Если прокрутили вниз больше 400 пикселей - показываем стрелку, иначе - прячем
+                    if (window.pageYOffset > 400) {
+                        scrollTopBtn.style.display = "block";
+                    } else {
+                        scrollTopBtn.style.display = "none";
+                    }
+                });
+
+                // При клике плавно улетаем наверх к шапке сайта
+                scrollTopBtn.addEventListener("click", function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                });
+
+                // Эффекты красивой микроанимации при наведении курсора (Hover)
+                scrollTopBtn.addEventListener("mouseenter", function() {
+                    scrollTopBtn.style.backgroundColor = "#6f42c1";
+                    scrollTopBtn.style.transform = "scale(1.1)";
+                });
+                scrollTopBtn.addEventListener("mouseleave", function() {
+                    scrollTopBtn.style.backgroundColor = "#212529";
+                    scrollTopBtn.style.transform = "scale(1)";
+                });
+            }
+        });
+    </script>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'js/app.js' %}?v=2.4"></script>
+
     {% block scripts %}{% endblock %}
 </body>
 </html>
-

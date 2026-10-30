@@ -5,16 +5,16 @@
 {% block content %}
     <!-- Блок популярных товаров -->
     {% if popular_products %}
-        <h2 class="mb-4 text-dark">🔥 Популярные товары</h2>
+        <h2 class="mb-4 text-dark fw-bold">🔥 Популярные товары</h2>
         <div class="row mb-5">
             {% for product in popular_products %}
                 <div class="col-md-3 mb-4">
-                    <div class="card h-100 border-warning shadow">
-                        <div class="card-body">
-                            <span class="badge bg-warning text-dark mb-2">Хит продаж</span>
-                            <h5 class="card-title fw-bold">{{ product.name }}</h5>
-                            <p class="card-text text-danger fs-5">{{ product.price }} ₽</p>
-                            <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-warning btn-sm w-100 fw-bold">Посмотреть</a>
+                    <div class="card h-100 border-warning shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <span class="badge bg-warning text-dark mb-2 align-self-start">Хит продаж</span>
+                            <h5 class="card-title fw-bold text-truncate">{{ product.name }}</h5>
+                            <p class="card-text text-danger fs-5 fw-bold mb-3">{{ product.price }} ₽</p>
+                            <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-warning btn-sm w-100 fw-bold mt-auto">Посмотреть</a>
                         </div>
                     </div>
                 </div>
@@ -23,9 +23,9 @@
     {% endif %}
 
     <div class="row">
-        <!-- Левая колонка: Фильтры -->
+        <!-- Левая колонка: Поиск и Фильтры -->
         <div class="col-md-3 mb-4">
-            <div class="card p-3 shadow-sm border-0 mb-4">
+            <div class="card p-3 shadow-sm border-0 mb-4 bg-white">
                 <h5 class="fw-bold mb-3">Фильтр товаров</h5>
                 <form method="get" action="{% url 'shop:product_list' %}">
                     <div class="mb-3">
@@ -39,37 +39,39 @@
                     {% if request.GET.category %}
                         <input type="hidden" name="category" value="{{ request.GET.category }}">
                     {% endif %}
-                    <button type="submit" class="btn btn-primary w-100 mb-2">Применить</button>
-                    <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary w-100 btn-sm">Сбросить</a>
+                    <button type="submit" class="btn btn-primary w-100 mb-2 fw-bold">Применить</button>
+                    <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary w-100 btn-sm fw-bold">Сбросить</a>
                 </form>
             </div>
 
             <h5 class="fw-bold mb-3">Категории</h5>
-            <div class="list-group shadow-sm">
+            <div class="list-group shadow-sm border-0">
                 <a href="{% url 'shop:product_list' %}" class="list-group-item list-group-item-action {% if not request.GET.category %}active{% endif %}">
                     Все категории
                 </a>
                 {% for cat in categories %}
-                    <a href="?category={{ cat.slug }}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                       class="list-group-item list-group-item-action {% if request.GET.category == cat.slug %}active{% endif %}">
-                        {{ cat.name }}
-                    </a>
+                    {% if not cat.parent %}
+                        <a href="?category={{ cat.slug }}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                           class="list-group-item list-group-item-action {% if request.GET.category == cat.slug %}active{% endif %}">
+                            {{ cat.name }}
+                        </a>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Правая колонка: Каталог товаров -->
+        <!-- Правая колонка: Сетка каталога -->
         <div class="col-md-9">
             <h4 class="fw-bold mb-4">Все товары в наличии</h4>
             <div class="row">
                 {% for product in products %}
                     <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm border-0">
+                        <div class="card h-100 shadow-sm border-0 bg-white">
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
+                                <h5 class="card-title fw-bold text-dark text-truncate">{{ product.name }}</h5>
                                 <p class="card-text text-success fw-bold fs-5 mb-2">{{ product.price }} ₽</p>
                                 <p class="card-text text-muted small flex-grow-1">{{ product.description|truncatewords:12 }}</p>
-                                <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm w-100 mt-2">Подробнее</a>
+                                <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm w-100 mt-3 fw-bold">Подробнее</a>
                             </div>
                         </div>
                     </div>
@@ -81,6 +83,21 @@
                     </div>
                 {% endfor %}
             </div>
+
+            <!-- Пагинация страниц каталога -->
+            {% if is_paginated %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">Назад</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}">Вперед</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

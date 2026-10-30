@@ -1,0 +1,61 @@
+services:
+  # 1. Сервер базы данных PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: vitrina_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: vitrina_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret_password_123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. Сервер кэширования Redis
+  redis:
+    image: redis:7-alpine
+    container_name: vitrina_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # 3. Веб-приложение Django
+  web:
+    build: .
+    container_name: vitrina_django_web
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=True
+      - DB_HOST=db
+      - DB_NAME=vitrina_db
+      - DB_USER=postgres
+      - DB_PASSWORD=secret_password_123
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+      - ai_ollama  # Django будет стартовать строго после запуска ИИ
+
+  # 4. ЛОКАЛЬНЫЙ ИИ-МИКРОСЕРВИС ДЛЯ ГЕНЕРАТИВНОГО ПОДБОРА ТОВАРОВ
+
+  ai_ollama:
+    image: ollama/ollama:latest
+    container_name: vitrina_ai_ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  postgres_data:
+  redis_data:
+  ollama_data:  # Раздел для хранения ИИ-модели DeepSeek внутри Docker

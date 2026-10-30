@@ -16,14 +16,15 @@
         <h5 class="fw-bold">Описание товара:</h5>
         <p class="text-secondary leading-relaxed">{{ product.description }}</p>
 
-        <!-- Кнопка Избранного с использованием официальных иконок Bootstrap -->
+        <!-- Кнопка Избранного (ИСПРАВЛЕНО: Уникальный id="favorite-text" вынесен за пределы if/else) -->
         {% if user.is_authenticated %}
             <button id="favorite-btn" class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %} mt-3 px-4 fw-bold shadow-sm">
                 {% if is_favorite %}
-                    <i class="bi bi-heart-fill me-2 text-white"></i><span id="favorite-text">В избранном</span>
+                    <i class="bi bi-heart-fill me-2 text-white"></i>
                 {% else %}
-                    <i class="bi bi-heart me-2 text-danger"></i><span id="favorite-text">В избранное</span>
+                    <i class="bi bi-heart me-2 text-danger"></i>
                 {% endif %}
+                <span id="favorite-text">{% if is_favorite %}В избранном{% else %}В избранное{% endif %}</span>
             </button>
         {% else %}
             <div class="alert alert-warning mt-3 py-2 fs-6 border-0 shadow-sm">
@@ -94,12 +95,10 @@
                         const icon = favBtn.querySelector('i');
 
                         if (data.is_favorite) {
-                            // Кнопка становится залитой красной, иконка становится БЕЛОЙ
                             favBtn.className = 'btn btn-danger mt-3 px-4 fw-bold shadow-sm';
                             icon.className = 'bi bi-heart-fill me-2 text-white';
                             textSpan.innerText = 'В избранном';
                         } else {
-                            // Кнопка становится прозрачной с красной рамкой, иконка становится КРАСНОЙ
                             favBtn.className = 'btn btn-outline-danger mt-3 px-4 fw-bold shadow-sm';
                             icon.className = 'bi bi-heart me-2 text-danger';
                             textSpan.innerText = 'В избранное';
